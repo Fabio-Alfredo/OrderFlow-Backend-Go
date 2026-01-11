@@ -1,0 +1,49 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.2.9">
+  <diagram name="Página-1" id="oVX-8NrZXUrqC3iJwKH4">
+    <mxGraphModel dx="1281" dy="809" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="IrSMk0TAIhPPk0GZSUyE-13" edge="1" parent="1" source="IrSMk0TAIhPPk0GZSUyE-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="IrSMk0TAIhPPk0GZSUyE-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrSMk0TAIhPPk0GZSUyE-1" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="CLIENTE" vertex="1">
+          <mxGeometry height="80" width="120" x="220" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrSMk0TAIhPPk0GZSUyE-14" edge="1" parent="1" source="IrSMk0TAIhPPk0GZSUyE-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="IrSMk0TAIhPPk0GZSUyE-7" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrSMk0TAIhPPk0GZSUyE-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;" value="GATEWAY" vertex="1">
+          <mxGeometry height="60" width="120" x="220" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="IrSMk0TAIhPPk0GZSUyE-15" edge="1" parent="1" source="IrSMk0TAIhPPk0GZSUyE-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="IrSMk0TAIhPPk0GZSUyE-8" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrSMk0TAIhPPk0GZSUyE-7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="AUTH SERVICE" vertex="1">
+          <mxGeometry height="60" width="120" x="220" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="IrSMk0TAIhPPk0GZSUyE-16" edge="1" parent="1" source="IrSMk0TAIhPPk0GZSUyE-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="IrSMk0TAIhPPk0GZSUyE-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrSMk0TAIhPPk0GZSUyE-19" edge="1" parent="1" source="IrSMk0TAIhPPk0GZSUyE-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="IrSMk0TAIhPPk0GZSUyE-9" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrSMk0TAIhPPk0GZSUyE-8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="ORDER SERVICE" vertex="1">
+          <mxGeometry height="60" width="120" x="220" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="IrSMk0TAIhPPk0GZSUyE-20" edge="1" parent="1" source="IrSMk0TAIhPPk0GZSUyE-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="IrSMk0TAIhPPk0GZSUyE-10" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrSMk0TAIhPPk0GZSUyE-9" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="PRICING SERVICE" vertex="1">
+          <mxGeometry height="60" width="120" x="220" y="555" as="geometry" />
+        </mxCell>
+        <mxCell id="IrSMk0TAIhPPk0GZSUyE-10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="PAYMENT SERVICE" vertex="1">
+          <mxGeometry height="60" width="120" x="220" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="IrSMk0TAIhPPk0GZSUyE-12" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="CUSTOMER SERVICE" vertex="1">
+          <mxGeometry height="60" width="120" x="380" y="520" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
