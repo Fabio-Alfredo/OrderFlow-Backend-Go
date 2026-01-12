@@ -6,7 +6,7 @@ type config struct {
 	viper *viper.Viper
 }
 
-func NewConfig(viper *viper.Viper) Config {
+func NewConfig(viper *viper.Viper) IConfig {
 	return &config{
 		viper: viper,
 	}
@@ -22,7 +22,11 @@ func (c *config) GetBool(key string) bool {
 	return c.viper.GetBool(key)
 }
 func (c *config) GetStringSlice(key string) []string {
-	return c.viper.GetStringSlice(key)
+	v := c.viper.GetStringSlice(key)
+	if v == nil {
+		return []string{}
+	}
+	return v
 }
 
 func (c *config) GetStringMap(key string) map[string]interface{} {

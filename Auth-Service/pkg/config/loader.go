@@ -3,7 +3,7 @@ package config
 import "github.com/spf13/viper"
 
 // Load loads the configuration from the specified path
-func Load(path string) (Config, error) {
+func Load(path string) (IConfig, error) {
 	// Create a new Viper instance
 	v := viper.New()
 	// Set the file name of the configurations file
