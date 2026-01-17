@@ -76,6 +76,7 @@ func Test_parserLevel(t *testing.T) {
 			args: args{level: "DEBUG"},
 			want: slog.LevelDebug,
 		},
+
 		{
 			name: "Default level for invalid input",
 			args: args{level: "invalid"},
