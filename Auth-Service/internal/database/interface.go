@@ -6,4 +6,5 @@ import (
 
 type ISqlDB interface {
 	GetDB() (*gorm.DB, error)
+	CloseDb() error
 }

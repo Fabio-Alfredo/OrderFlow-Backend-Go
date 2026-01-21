@@ -3,6 +3,7 @@ package database
 import (
 	"Auth-Service/pkg/config"
 	"database/sql"
+	"errors"
 	"fmt"
 
 	"gorm.io/driver/mysql"
@@ -20,6 +21,19 @@ func NewSQLConfig(config config.IConfig) ISqlDB {
 	return &sqlConfig{
 		config: config,
 	}
+}
+
+func (s *sqlConfig) CloseDb() error {
+	if s.db == nil {
+		return nil
+	}
+
+	sqlDb, err := s.db.DB()
+	if err != nil {
+		return errors.New("failed to get sql.DB from gorm.DB")
+	}
+
+	return sqlDb.Close()
 }
 
 func (s *sqlConfig) GetDB() (*gorm.DB, error) {
@@ -64,5 +78,5 @@ func (s *sqlConfig) getDns() string {
 	zone := s.config.GetString("datasource.zone")
 	port := s.config.GetString("datasource.port")
 
-	return fmt.Sprintf(dnsFormat, username, password, port, host, database, zone)
+	return fmt.Sprintf(dnsFormat, username, password, host, port, database, zone)
 }
