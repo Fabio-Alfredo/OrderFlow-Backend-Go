@@ -1,8 +1,8 @@
 package impl
 
 import (
-	"Auth-Service/internal/domain"
 	"Auth-Service/internal/repository/contract"
+	"Auth-Service/internal/repository/entities"
 	"Auth-Service/pkg/config"
 	"Auth-Service/pkg/logger"
 	"Auth-Service/pkg/logger/console"
@@ -29,7 +29,7 @@ func NewUserRepository(config config.IConfig, sqlDb *gorm.DB) contract.IUserRepo
 	}
 }
 
-func (r *userRepository) Save(ctx context.Context, data *domain.User) error {
+func (r *userRepository) Save(ctx context.Context, data *entities.User) error {
 	r.logger.Info(ctx, userRepositoryTitle+console.StartKey, "data", data)
 
 	res := r.db.Table("users_tb").
@@ -44,10 +44,10 @@ func (r *userRepository) Save(ctx context.Context, data *domain.User) error {
 	return nil
 }
 
-func (r *userRepository) FindEmail(ctx context.Context, email string) (domain.User, error) {
+func (r *userRepository) FindEmail(ctx context.Context, email string) (entities.User, error) {
 	r.logger.Info(ctx, userRepositoryTitle+console.StartKey, "email", email)
 
-	var user domain.User
+	var user entities.User
 	err := r.db.Table("users_tb").
 		Where("email = ?", email).
 		First(&user).Error
@@ -55,10 +55,10 @@ func (r *userRepository) FindEmail(ctx context.Context, email string) (domain.Us
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			r.logger.Error(ctx, userRepositoryTitle+console.ErrorKey, "message", "user not found")
-			return domain.User{}, errors.New("user not found")
+			return entities.User{}, errors.New("user not found")
 		}
 		r.logger.Error(ctx, userRepositoryTitle+console.ErrorKey, "error", err)
-		return domain.User{}, err
+		return entities.User{}, err
 	}
 
 	r.logger.Info(ctx, userRepositoryTitle+console.EndKey, "user", user)
