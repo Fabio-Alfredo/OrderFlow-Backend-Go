@@ -184,16 +184,30 @@ func Test_logger_withTraceID(t *testing.T) {
 }
 
 func Test_attrsFromCtx(t *testing.T) {
+	var buf bytes.Buffer
+
+	type fields struct {
+		log *slog.Logger
+		opt *console.Options
+	}
 	type args struct {
 		ctx context.Context
 	}
 	tests := []struct {
-		name string
-		args args
-		want []any
+		name   string
+		fields fields
+		args   args
+		want   []any
 	}{
 		{
 			name: "Context with trace ID",
+			fields: fields{
+				log: slog.New(slog.NewTextHandler(&buf, handler.GetHandlerOptions("INFO"))),
+				opt: &console.Options{
+					Mode:  console.ModeText,
+					Level: "INFO",
+				},
+			},
 			args: args{
 				ctx: func() context.Context {
 					l := &logger{}
@@ -215,7 +229,11 @@ func Test_attrsFromCtx(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := attrsFromCtx(tt.args.ctx); !reflect.DeepEqual(got, tt.want) {
+			l := &logger{
+				log: tt.fields.log,
+				opt: tt.fields.opt,
+			}
+			if got := l.attrsFromCtx(tt.args.ctx); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("attrsFromCtx() = %v, want %v", got, tt.want)
 			}
 		})
