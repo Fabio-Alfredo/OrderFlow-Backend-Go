@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"Auth-Service/pkg/logger/data"
+	"Auth-Service/pkg/logger/console"
 	"Auth-Service/pkg/logger/handler"
 	"bytes"
 	"context"
@@ -13,7 +13,7 @@ import (
 
 func TestNewLogger(t *testing.T) {
 	type args struct {
-		opts *data.Options
+		opts *console.Options
 	}
 
 	tests := []struct {
@@ -24,8 +24,8 @@ func TestNewLogger(t *testing.T) {
 		{
 			name: "JSON mode with DEBUG level",
 			args: args{
-				opts: &data.Options{
-					Mode:  data.ModeJSON,
+				opts: &console.Options{
+					Mode:  console.ModeJSON,
 					Level: "DEBUG",
 				},
 			},
@@ -37,8 +37,8 @@ func TestNewLogger(t *testing.T) {
 					t.Fatalf("expected *logger, got %T", got)
 				}
 
-				if l.opt.Mode != data.ModeJSON {
-					t.Errorf("Mode = %v, want %v", l.opt.Mode, data.ModeJSON)
+				if l.opt.Mode != console.ModeJSON {
+					t.Errorf("Mode = %v, want %v", l.opt.Mode, console.ModeJSON)
 				}
 
 				if l.opt.Level != "DEBUG" {
@@ -63,7 +63,7 @@ func TestNewLogger(t *testing.T) {
 func Test_logger_Info(t *testing.T) {
 	type fields struct {
 		log *slog.Logger
-		opt *data.Options
+		opt *console.Options
 	}
 	type args struct {
 		ctx           context.Context
@@ -79,8 +79,8 @@ func Test_logger_Info(t *testing.T) {
 			name: "Log info message without context",
 			fields: fields{
 				log: slog.New(slog.NewTextHandler(os.Stdout, handler.GetHandlerOptions("INFO"))),
-				opt: &data.Options{
-					Mode:  data.ModeText,
+				opt: &console.Options{
+					Mode:  console.ModeText,
 					Level: "INFO",
 				},
 			},
@@ -93,8 +93,8 @@ func Test_logger_Info(t *testing.T) {
 			name: "Log info message with trace ID in context",
 			fields: fields{
 				log: slog.New(slog.NewTextHandler(os.Stdout, handler.GetHandlerOptions("INFO"))),
-				opt: &data.Options{
-					Mode:  data.ModeText,
+				opt: &console.Options{
+					Mode:  console.ModeText,
 					Level: "INFO",
 				},
 			},
@@ -123,7 +123,7 @@ func Test_logger_withTraceID(t *testing.T) {
 
 	type fields struct {
 		log *slog.Logger
-		opt *data.Options
+		opt *console.Options
 	}
 	type args struct {
 		ctx     context.Context
@@ -139,8 +139,8 @@ func Test_logger_withTraceID(t *testing.T) {
 			name: "Log info message without context",
 			fields: fields{
 				log: slog.New(slog.NewTextHandler(&buf, handler.GetHandlerOptions("INFO"))),
-				opt: &data.Options{
-					Mode:  data.ModeText,
+				opt: &console.Options{
+					Mode:  console.ModeText,
 					Level: "INFO",
 				},
 			},
@@ -156,8 +156,8 @@ func Test_logger_withTraceID(t *testing.T) {
 			name: "Log info message with existing context",
 			fields: fields{
 				log: slog.New(slog.NewTextHandler(&buf, handler.GetHandlerOptions("INFO"))),
-				opt: &data.Options{
-					Mode:  data.ModeText,
+				opt: &console.Options{
+					Mode:  console.ModeText,
 					Level: "INFO",
 				},
 			},

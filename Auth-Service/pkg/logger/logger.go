@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"Auth-Service/pkg/logger/data"
+	"Auth-Service/pkg/logger/console"
 	LogHandler "Auth-Service/pkg/logger/handler"
 	"context"
 	"log/slog"
@@ -14,16 +14,16 @@ const traceIDKey ctxKey = "trace_id"
 
 type logger struct {
 	log *slog.Logger
-	opt *data.Options
+	opt *console.Options
 }
 
-func NewLogger(opts *data.Options) ILogger {
+func NewLogger(opts *console.Options) ILogger {
 	var log *slog.Logger
 
 	switch opts.Mode {
-	case data.ModeJSON:
+	case console.ModeJSON:
 		log = slog.New(slog.NewJSONHandler(os.Stdout, LogHandler.GetHandlerOptions(opts.Level)))
-	case data.ModeText:
+	case console.ModeText:
 		log = slog.New(slog.NewTextHandler(os.Stdout, LogHandler.GetHandlerOptions(opts.Level)))
 	default:
 		log = slog.New(slog.NewJSONHandler(os.Stdout, LogHandler.GetHandlerOptions(opts.Level)))
@@ -38,6 +38,10 @@ func NewLogger(opts *data.Options) ILogger {
 // Info logs an informational message with context.
 func (l *logger) Info(ctx context.Context, msg string, keysAndValues ...any) {
 	l.log.With(attrsFromCtx(ctx)...).Log(ctx, slog.LevelInfo, msg, keysAndValues...)
+}
+
+func (l *logger) Error(ctx context.Context, msg string, keysAndValues ...any) {
+	l.log.With(attrsFromCtx(ctx)...).Log(ctx, slog.LevelError, msg, keysAndValues...)
 }
 
 // withTraceID adds a trace ID to the context for logging.

@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"Auth-Service/pkg/logger/data"
+	"Auth-Service/pkg/logger/console"
 	"fmt"
 	"log/slog"
 	"path"
@@ -10,8 +10,8 @@ import (
 )
 
 var levelNames = map[slog.Level]string{
-	data.LevelPanic: "panic",
-	data.LevelFatal: "fatal",
+	console.LevelPanic: "panic",
+	console.LevelFatal: "fatal",
 }
 
 // GetHandlerOptions  creates and returns log handler options

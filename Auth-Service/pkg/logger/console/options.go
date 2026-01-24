@@ -1,4 +1,4 @@
-package data
+package console
 
 type Options struct {
 	Mode  string
