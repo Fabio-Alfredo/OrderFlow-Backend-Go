@@ -28,5 +28,5 @@ func (h *Hasher) HashPassword(in string) (string, error) {
 
 func (h *Hasher) CheckPasswordHash(in, inHash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(inHash), []byte(in))
-	return err != nil
+	return err == nil
 }

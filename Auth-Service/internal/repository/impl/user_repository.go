@@ -44,7 +44,7 @@ func (r *userRepository) Save(ctx context.Context, data *repository.User) error 
 	return nil
 }
 
-func (r *userRepository) FindEmail(ctx context.Context, email string) (repository.User, error) {
+func (r *userRepository) FindEmail(ctx context.Context, email string) (*repository.User, error) {
 	r.logger.Info(ctx, userRepositoryTitle+console.StartKey, "email", email)
 
 	var user repository.User
@@ -55,12 +55,12 @@ func (r *userRepository) FindEmail(ctx context.Context, email string) (repositor
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			r.logger.Error(ctx, userRepositoryTitle+console.ErrorKey, "message", "user not found")
-			return repository.User{}, repository.ErrUserNotFound
+			return nil, repository.ErrUserNotFound
 		}
 		r.logger.Error(ctx, userRepositoryTitle+console.ErrorKey, "error", err)
-		return repository.User{}, err
+		return nil, err
 	}
 
 	r.logger.Info(ctx, userRepositoryTitle+console.EndKey, "user", user)
-	return user, nil
+	return &user, nil
 }

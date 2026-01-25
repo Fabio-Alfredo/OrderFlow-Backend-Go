@@ -21,5 +21,5 @@ func GetDnsMock(config config.IConfig) string {
 	zone := config.GetString("datasource.zone")
 	port := config.GetString("datasource.port")
 
-	return fmt.Sprintf("%s:%s@(%s:%s)/%s?parseTime=True&loc=%s", username, password, port, host, database, zone)
+	return fmt.Sprintf("%s:%s@(%s:%s)/%s?parseTime=True&loc=%s", username, password, host, port, database, zone)
 }

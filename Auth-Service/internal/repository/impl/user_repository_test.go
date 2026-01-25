@@ -59,14 +59,14 @@ func Test_userRepository_Save(t *testing.T) {
 	errorDummy := errors.New("dummy error")
 
 	//Mock for error
-	mockErr, gdbErr := mocks.GetDb(configs)
+	mockErr, gdbErr := mocks.GetDb()
 	mockErr.ExpectBegin()
 	mockErr.ExpectExec("").
 		WillReturnError(errorDummy)
 	mockErr.ExpectRollback()
 
 	//Mock for success
-	mockSucc, gdbSucc := mocks.GetDb(configs)
+	mockSucc, gdbSucc := mocks.GetDb()
 	mockSucc.ExpectBegin()
 	mockSucc.ExpectExec("").
 		WillReturnResult(sqlmock.NewResult(1, 1))
@@ -157,7 +157,7 @@ func Test_userRepository_FindEmail(t *testing.T) {
 	errorDummy := errors.New("dummy error")
 
 	//Mock for success find
-	mockSucc, gdbSucc := mocks.GetDb(configs)
+	mockSucc, gdbSucc := mocks.GetDb()
 	rows := sqlmock.NewRows([]string{"id", "name", "email", "password", "status", "create_at", "update_at"}).
 		AddRow("1234", "user", "user@gmail.com", "kjf4490", "activo", date, date)
 	mockSucc.ExpectQuery("").
@@ -165,13 +165,13 @@ func Test_userRepository_FindEmail(t *testing.T) {
 		WillReturnRows(rows)
 
 	//Mock for record not found
-	mockErr, gdbErr := mocks.GetDb(configs)
+	mockErr, gdbErr := mocks.GetDb()
 	mockErr.ExpectQuery("").
 		WithArgs("not-email", 1).
 		WillReturnError(gorm.ErrRecordNotFound)
 
 	//Mock for repository error
-	mockErrR, gdbErrR := mocks.GetDb(configs)
+	mockErrR, gdbErrR := mocks.GetDb()
 	mockErrR.ExpectQuery("").
 		WithArgs("not-found", 1).
 		WillReturnError(errorDummy)
@@ -203,7 +203,7 @@ func Test_userRepository_FindEmail(t *testing.T) {
 				ctx:   ctx,
 				email: "user@gmail.com",
 			},
-			want: repository.User{
+			want: &repository.User{
 				Id:       "1234",
 				Name:     "user",
 				Email:    "user@gmail.com",

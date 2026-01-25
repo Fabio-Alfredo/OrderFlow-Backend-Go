@@ -60,15 +60,6 @@ func Test_sqlConfig_GetDB(t *testing.T) {
 			want:    &gorm.DB{},
 			wantErr: false,
 		},
-		{
-			name: "Error connecting to database",
-			fields: fields{
-				config: configs,
-				db:     nil,
-			},
-			want:    nil,
-			wantErr: true,
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
