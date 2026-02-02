@@ -1,8 +1,6 @@
-package security
+package utils
 
-import (
-	"golang.org/x/crypto/bcrypt"
-)
+import "golang.org/x/crypto/bcrypt"
 
 func HashPassword(in string, hashCost int) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(in), hashCost)

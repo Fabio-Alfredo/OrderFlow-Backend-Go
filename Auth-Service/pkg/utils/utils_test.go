@@ -1,4 +1,4 @@
-package security
+package utils
 
 import (
 	"Auth-Service/pkg/config"
@@ -7,7 +7,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func TestHasher_HashPassword(t *testing.T) {
+func TestHashPassword(t *testing.T) {
 	configs, _ := config.Load("../../")
 
 	type fields struct {
@@ -57,7 +57,7 @@ func TestHasher_HashPassword(t *testing.T) {
 	}
 }
 
-func TestHasher_CheckPasswordHash(t *testing.T) {
+func TestCheckPasswordHash(t *testing.T) {
 	configs, _ := config.Load("../../")
 
 	validPassword := "123456"

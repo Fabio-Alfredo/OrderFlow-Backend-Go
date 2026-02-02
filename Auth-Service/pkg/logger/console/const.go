@@ -13,4 +13,5 @@ const (
 	StartKey    = "start"
 	EndKey      = "finish"
 	FailedKey   = "failed"
+	DataKey     = "data"
 )

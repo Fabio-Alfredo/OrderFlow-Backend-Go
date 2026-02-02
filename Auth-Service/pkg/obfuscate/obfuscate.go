@@ -1,7 +1,7 @@
 package obfuscate
 
 import (
-	"Auth-Service/internal/domain"
+	"Auth-Service/internal/dtos"
 	"strings"
 )
 
@@ -11,9 +11,9 @@ const (
 )
 
 // Register Method for obfuscate password in register user
-func Register(req domain.RegisterRequest) domain.RegisterRequest {
-	req.User.Password = charObfuscatePass
-	return req
+func Register(user dtos.User) dtos.User {
+	user.Password = charObfuscatePass
+	return user
 }
 
 // ObfuscateValue obfuscate the fields values

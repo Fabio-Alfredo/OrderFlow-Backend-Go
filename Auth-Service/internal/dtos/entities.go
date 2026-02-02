@@ -1,4 +1,4 @@
-package domain
+package dtos
 
 type User struct {
 	Id       string `json:"id"`
@@ -17,13 +17,11 @@ type LoginRequest struct {
 }
 
 type RegisterResponse struct {
-	Message Message `json:"message"`
-	Url     string  `json:"url"`
+	Message string `json:"message"`
 }
 type LoginResponse struct {
 	Message Message `json:"message"`
 	Auth    Auth    `json:"auth"`
-	Url     string  `json:"url"`
 }
 type Auth struct {
 	Token string `json:"token"`

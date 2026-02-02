@@ -10,3 +10,23 @@ datasource:
   port: 3306
   zone: America%2FEL_Salvador
 
+auth:
+  secure:
+    hash_cost: 14
+  register:
+    errors:
+      USER_ALREADY_EXISTS:
+        code: "409"
+        message: "El usuario ya existe"
+      INVALID_EMAIL:
+        code: "400"
+        message: "El correo no es válido"
+      INTERNAL:
+        code: "500"
+        message: "Error interno del servidor"
+    success:
+      message: ""
+      code: "200"
+  registration:
+    default:
+      status: "active"
