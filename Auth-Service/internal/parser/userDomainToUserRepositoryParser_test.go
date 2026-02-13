@@ -1,7 +1,7 @@
 package parser
 
 import (
-	"Auth-Service/internal/dtos"
+	"Auth-Service/internal/domain"
 	"Auth-Service/internal/repository"
 	"Auth-Service/internal/service"
 	"Auth-Service/pkg/config"
@@ -24,14 +24,14 @@ func TestNewUserDtoToUserRepositoryParser(t *testing.T) {
 			args: args{
 				config: configs,
 			},
-			want: &userDtoToUserRepositoryParser{
+			want: &userDomainToUserRepositoryParser{
 				config: configs,
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewUserDtoToUserRepositoryParser(tt.args.config); !reflect.DeepEqual(got, tt.want) {
+			if got := NewUserDomainToUserRepositoryParser(tt.args.config); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewUserDtoToUserRepositoryParser() = %v, want %v", got, tt.want)
 			}
 		})
@@ -39,7 +39,7 @@ func TestNewUserDtoToUserRepositoryParser(t *testing.T) {
 }
 
 func Test_userDtoToUserRepositoryParser_Parser(t *testing.T) {
-	configs, _ := config.Load("../../../")
+	configs, _ := config.Load("../../")
 	type fields struct {
 		config config.IConfig
 	}
@@ -60,7 +60,7 @@ func Test_userDtoToUserRepositoryParser_Parser(t *testing.T) {
 			},
 			args: args{
 				in: []any{
-					&dtos.User{
+					&domain.User{
 						Id:       "1",
 						Name:     "user",
 						Email:    "user@gmail.com",
@@ -80,7 +80,7 @@ func Test_userDtoToUserRepositoryParser_Parser(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := &userDtoToUserRepositoryParser{
+			p := &userDomainToUserRepositoryParser{
 				config: tt.fields.config,
 			}
 			got, err := p.Parser(tt.args.in...)
