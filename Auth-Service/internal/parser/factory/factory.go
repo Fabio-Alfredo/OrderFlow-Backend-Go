@@ -1,22 +1,22 @@
 package factory
 
 import (
-	"Auth-Service/internal/service"
+	"Auth-Service/internal/parser"
 	"errors"
 	"strings"
 )
 
 type parserFactory struct {
-	parsers map[string]service.IParser
+	parsers map[string]parser.IParser
 }
 
-func NewParserFactory() service.IFactory {
+func NewParserFactory() parser.IFactory {
 	return &parserFactory{
-		parsers: make(map[string]service.IParser),
+		parsers: make(map[string]parser.IParser),
 	}
 }
 
-func (f *parserFactory) Set(key string, parser service.IParser) error {
+func (f *parserFactory) Set(key string, parser parser.IParser) error {
 	if strings.TrimSpace(key) == "" {
 		return errors.New("invalid the key is empty")
 	}
@@ -28,7 +28,7 @@ func (f *parserFactory) Set(key string, parser service.IParser) error {
 	return nil
 }
 
-func (f *parserFactory) Get(key string) (parser service.IParser, err error) {
+func (f *parserFactory) Get(key string) (parser parser.IParser, err error) {
 	if strings.TrimSpace(key) == "" {
 		return nil, errors.New("invalid the key is empty")
 	}

@@ -3,7 +3,6 @@ package parser
 import (
 	"Auth-Service/internal/domain"
 	"Auth-Service/internal/repository"
-	"Auth-Service/internal/service"
 	"Auth-Service/pkg/config"
 	"reflect"
 	"testing"
@@ -17,7 +16,7 @@ func TestNewUserDtoToUserRepositoryParser(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want service.IParser
+		want IParser
 	}{
 		{
 			name: "Test NewUserDtoToUserRepositoryParser",

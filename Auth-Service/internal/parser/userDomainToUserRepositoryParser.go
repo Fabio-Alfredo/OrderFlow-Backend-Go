@@ -3,7 +3,6 @@ package parser
 import (
 	"Auth-Service/internal/domain"
 	"Auth-Service/internal/repository"
-	"Auth-Service/internal/service"
 	"Auth-Service/pkg/config"
 )
 
@@ -13,7 +12,7 @@ type userDomainToUserRepositoryParser struct {
 	config config.IConfig
 }
 
-func NewUserDomainToUserRepositoryParser(config config.IConfig) service.IParser {
+func NewUserDomainToUserRepositoryParser(config config.IConfig) IParser {
 	return &userDomainToUserRepositoryParser{
 		config: config,
 	}

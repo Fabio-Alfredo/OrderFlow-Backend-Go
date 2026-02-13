@@ -2,7 +2,6 @@ package factory
 
 import (
 	"Auth-Service/internal/parser"
-	"Auth-Service/internal/service"
 	"Auth-Service/pkg/config"
 	"reflect"
 	"testing"
@@ -11,12 +10,12 @@ import (
 func TestNewParserFactory(t *testing.T) {
 	tests := []struct {
 		name string
-		want service.IFactory
+		want parser.IFactory
 	}{
 		{
 			name: "Test NewParserFactory",
 			want: &parserFactory{
-				parsers: map[string]service.IParser{},
+				parsers: map[string]parser.IParser{},
 			},
 		},
 	}
@@ -31,13 +30,13 @@ func TestNewParserFactory(t *testing.T) {
 
 func Test_parserFactory_Set(t *testing.T) {
 	configs, _ := config.Load("../../../../")
-	newParser := parser.NewUserDtoToUserRepositoryParser(configs)
+	newParser := parser.NewUserDomainToUserRepositoryParser(configs)
 	type fields struct {
-		parsers map[string]service.IParser
+		parsers map[string]parser.IParser
 	}
 	type args struct {
 		key    string
-		parser service.IParser
+		parser parser.IParser
 	}
 	tests := []struct {
 		name    string
@@ -48,10 +47,10 @@ func Test_parserFactory_Set(t *testing.T) {
 		{
 			name: "Test set parser success",
 			fields: fields{
-				parsers: map[string]service.IParser{},
+				parsers: map[string]parser.IParser{},
 			},
 			args: args{
-				key:    parser.UserDtoToUserRepositoryParser,
+				key:    parser.UserDomainToUserRepositoryParser,
 				parser: newParser,
 			},
 			wantErr: false,
@@ -59,7 +58,7 @@ func Test_parserFactory_Set(t *testing.T) {
 		{
 			name: "Test set parser error in key empty",
 			fields: fields{
-				parsers: map[string]service.IParser{},
+				parsers: map[string]parser.IParser{},
 			},
 			args: args{
 				key: "",
@@ -69,10 +68,10 @@ func Test_parserFactory_Set(t *testing.T) {
 		{
 			name: "Test set parser error in parser empty",
 			fields: fields{
-				parsers: map[string]service.IParser{},
+				parsers: map[string]parser.IParser{},
 			},
 			args: args{
-				key:    parser.UserDtoToUserRepositoryParser,
+				key:    parser.UserDomainToUserRepositoryParser,
 				parser: nil,
 			},
 			wantErr: true,
