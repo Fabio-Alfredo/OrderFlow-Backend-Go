@@ -1,6 +1,7 @@
 package user
 
 import (
+	"Auth-Service/internal/parser"
 	"Auth-Service/internal/repository"
 	"Auth-Service/pkg/config"
 	"Auth-Service/pkg/logger"
@@ -13,15 +14,17 @@ const (
 )
 
 type userRepository struct {
-	config config.IConfig
-	db     *gorm.DB
-	logger logger.ILogger
+	config  config.IConfig
+	db      *gorm.DB
+	logger  logger.ILogger
+	parsers parser.IFactory
 }
 
-func NewUserRepository(config config.IConfig, sqlDb *gorm.DB, logger logger.ILogger) repository.IUserRepository {
+func NewUserRepository(config config.IConfig, sqlDb *gorm.DB, logger logger.ILogger, parsers parser.IFactory) repository.IUserRepository {
 	return &userRepository{
-		config: config,
-		db:     sqlDb,
-		logger: logger,
+		config:  config,
+		db:      sqlDb,
+		logger:  logger,
+		parsers: parsers,
 	}
 }
