@@ -76,6 +76,17 @@ func Test_userDtoToUserRepositoryParser_Parser(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name:   "Test userDto to userRepository invalid input",
+			fields: fields{},
+			args: args{
+				in: []any{
+					"invalid input",
+				},
+			},
+			want:    nil,
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

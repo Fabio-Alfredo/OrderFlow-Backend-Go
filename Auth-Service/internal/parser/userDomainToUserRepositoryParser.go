@@ -19,7 +19,11 @@ func NewUserDomainToUserRepositoryParser(config config.IConfig) IParser {
 }
 
 func (p *userDomainToUserRepositoryParser) Parser(in ...any) (any, error) {
-	userDto := in[0].(*domain.User)
+	userDto, ok := in[0].(*domain.User)
+
+	if !ok {
+		return nil, domain.ErrInvalidInput
+	}
 
 	return &repository.User{
 		Id:       userDto.Id,
