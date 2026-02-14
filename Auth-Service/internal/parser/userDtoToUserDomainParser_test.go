@@ -40,11 +40,13 @@ func Test_userDtoToUserDomainParser_Parser(t *testing.T) {
 			name: "Test userDto to userDomain success",
 			args: args{
 				in: []any{
-					&dtos.User{
-						Id:       "1",
-						Name:     "User",
-						Email:    "user@gmail.com",
-						Password: "fujew9ru98re34",
+					&dtos.RegisterRequest{
+						User: dtos.User{
+							Id:       "1",
+							Name:     "User",
+							Email:    "user@gmail.com",
+							Password: "fujew9ru98re34",
+						},
 					},
 				},
 			},

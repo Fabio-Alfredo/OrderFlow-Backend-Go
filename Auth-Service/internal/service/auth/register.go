@@ -15,7 +15,7 @@ const (
 )
 
 func (s *authService) Register(ctx context.Context, user *domain.User) (*domain.RegisterResult, error) {
-	s.log.Info(ctx, registerServiceTitle+console.StartKey, console.RequestKey, obfuscate.Register(*user))
+	s.log.Info(ctx, registerServiceTitle+console.StartKey, console.RequestKey, obfuscate.RegisterService(*user))
 
 	existUser, _ := s.repository.FindEmail(ctx, user.Email)
 	if existUser != nil {

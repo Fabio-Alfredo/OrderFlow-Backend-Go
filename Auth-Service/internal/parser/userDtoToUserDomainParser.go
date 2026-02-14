@@ -17,16 +17,16 @@ func NewUserDtoToUserDomainParser() IParser {
 }
 
 func (p *userDtoToUserDomainParser) Parser(in ...any) (any, error) {
-	userDto, ok := in[0].(*dtos.User)
+	req, ok := in[0].(*dtos.RegisterRequest)
 	if !ok {
 		return nil, domain.ErrInvalidInput
 	}
 
 	return &domain.User{
-		Id:       userDto.Id,
-		Name:     userDto.Name,
-		Email:    userDto.Email,
-		Password: userDto.Password,
+		Id:       req.User.Id,
+		Name:     req.User.Name,
+		Email:    req.User.Email,
+		Password: req.User.Password,
 	}, nil
 
 }

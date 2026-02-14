@@ -17,6 +17,7 @@ type LoginRequest struct {
 }
 
 type RegisterResponse struct {
+	Code    string `json:"code"`
 	Message string `json:"message"`
 }
 type LoginResponse struct {

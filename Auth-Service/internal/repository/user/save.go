@@ -12,7 +12,11 @@ func (r *userRepository) Save(ctx context.Context, domainUser *domain.User) erro
 	mapper, _ := r.parsers.Get(parser.UserDomainToUserRepositoryParser)
 	r.logger.Info(ctx, userRepositoryTitle+console.StartKey, "data", domainUser)
 
-	parsed, _ := mapper.Parser(domainUser)
+	parsed, err := mapper.Parser(domainUser)
+	if err != nil {
+		r.logger.Error(ctx, userRepositoryTitle+console.ErrorKey, err.Error())
+		return err
+	}
 	userModel := parsed.(*repository.User)
 
 	res := r.db.Table("users_tb").
