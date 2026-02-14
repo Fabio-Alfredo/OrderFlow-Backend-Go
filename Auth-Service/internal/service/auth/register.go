@@ -1,10 +1,7 @@
 package auth
 
 import (
-	"Auth-Service/internal/dtos"
-	"Auth-Service/internal/parser"
-	"Auth-Service/internal/repository"
-	"Auth-Service/internal/service"
+	"Auth-Service/internal/domain"
 	"Auth-Service/pkg/logger/console"
 	"Auth-Service/pkg/obfuscate"
 	"Auth-Service/pkg/utils"
@@ -17,43 +14,37 @@ const (
 	registerServiceTitle = "register service: "
 )
 
-func (s *authService) Register(ctx context.Context, userDto *dtos.User) *service.RegisterServiceResp {
-	parser, _ := s.parsers.Get(parser.UserDtoToUserRepositoryParser)
-	s.log.Info(ctx, registerServiceTitle+console.StartKey, console.RequestKey, obfuscate.Register(*userDto))
+func (s *authService) Register(ctx context.Context, user *domain.User) (*domain.RegisterResult, error) {
+	s.log.Info(ctx, registerServiceTitle+console.StartKey, console.RequestKey, obfuscate.Register(*user))
 
-	existUser, _ := s.repository.FindEmail(ctx, userDto.Email)
+	existUser, _ := s.repository.FindEmail(ctx, user.Email)
 	if existUser != nil {
-		err := &service.RegisterServiceResp{
-			Code:    s.config.GetString("auth.register.errors.USER_ALREADY_EXISTS.code"),
-			Message: s.config.GetString("auth.register.errors.USER_ALREADY_EXISTS.message"),
-		}
-		s.log.Error(ctx, registerServiceTitle, console.ErrorKey, err.Message)
-		return err
+		s.log.Error(ctx, registerServiceTitle, console.ErrorKey, domain.ErrAlreadyExists)
+		return nil, domain.ErrAlreadyExists
 	}
 
-	s.prepareUserForCreation(userDto)
-	user, _ := parser.Parser(userDto)
+	s.prepareUserForCreation(user)
 
-	err := s.repository.Save(ctx, user.(*repository.User))
+	err := s.repository.Save(ctx, user)
 	if err != nil {
-		err := &service.RegisterServiceResp{
-			Code:    s.config.GetString("auth.register.errors.INTERNAL.code"),
-			Message: err.Error(),
-		}
-		s.log.Error(ctx, registerServiceTitle, console.ErrorKey, err.Message)
-		return err
+		s.log.Error(ctx, registerServiceTitle, console.ErrorKey, err)
+		return nil, err
 	}
 
-	res := &service.RegisterServiceResp{
-		Code:    s.config.GetString("auth.register.success.code"),
-		Message: s.config.GetString("auth.register.success.message"),
-	}
+	res := s.buildResponse()
 	s.log.Info(ctx, registerServiceTitle+console.EndKey, console.RequestKey, res)
-	return res
+	return res, nil
 }
 
-func (s *authService) prepareUserForCreation(user *dtos.User) {
+func (s *authService) prepareUserForCreation(user *domain.User) {
 	hashPass, _ := utils.HashPassword(user.Password, s.config.GetInt("auth.secure.hash_cost"))
 	user.Password = hashPass
 	user.Id = uuid.New().String()
+}
+
+func (s *authService) buildResponse() *domain.RegisterResult {
+	return &domain.RegisterResult{
+		Code:    s.config.GetString("auth.register.success.code"),
+		Message: s.config.GetString("auth.register.success.message"),
+	}
 }

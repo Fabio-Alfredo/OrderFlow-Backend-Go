@@ -1,11 +1,9 @@
 package auth
 
 import (
-	"Auth-Service/internal/dtos"
+	"Auth-Service/internal/domain"
 	"Auth-Service/internal/parser"
-	"Auth-Service/internal/parser/factory"
 	"Auth-Service/internal/repository"
-	"Auth-Service/internal/service"
 	"Auth-Service/internal/service/mocks"
 	"Auth-Service/pkg/config"
 	"Auth-Service/pkg/logger"
@@ -19,24 +17,22 @@ func Test_authService_Register(t *testing.T) {
 	log := logger.NewLogger()
 	ctx := context.Background()
 
-	parsers := factory.NewParserFactory()
-	_ = parsers.Set(parser.UserDtoToUserRepositoryParser, parser.NewUserDtoToUserRepositoryParser(configs))
-
 	type fields struct {
 		config     config.IConfig
 		log        logger.ILogger
 		repository repository.IUserRepository
-		parsers    service.IFactory
+		parsers    parser.IFactory
 	}
 	type args struct {
-		ctx     context.Context
-		userDto *dtos.User
+		ctx  context.Context
+		user *domain.User
 	}
 	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   *service.RegisterServiceResp
+		name    string
+		fields  fields
+		args    args
+		want    *domain.RegisterResult
+		wantErr bool
 	}{
 		{
 			name: "Test register user success",
@@ -44,21 +40,22 @@ func Test_authService_Register(t *testing.T) {
 				config:     configs,
 				log:        log,
 				repository: mocks.NewMockRepository(false, false),
-				parsers:    parsers,
+				parsers:    nil,
 			},
 			args: args{
 				ctx: ctx,
-				userDto: &dtos.User{
+				user: &domain.User{
 					Id:       "",
 					Name:     "user",
 					Email:    "user@gmail.com",
 					Password: "aser34f34qf",
 				},
 			},
-			want: &service.RegisterServiceResp{
+			want: &domain.RegisterResult{
 				Code:    configs.GetString("auth.register.success.code"),
 				Message: configs.GetString("auth.register.success.message"),
 			},
+			wantErr: false,
 		},
 		{
 			name: "Test register user error internal",
@@ -66,21 +63,19 @@ func Test_authService_Register(t *testing.T) {
 				config:     configs,
 				log:        log,
 				repository: mocks.NewMockRepository(true, false),
-				parsers:    parsers,
+				parsers:    nil,
 			},
 			args: args{
 				ctx: ctx,
-				userDto: &dtos.User{
+				user: &domain.User{
 					Id:       "",
 					Name:     "user",
 					Email:    "user@gmail.com",
 					Password: "aser34f34qf",
 				},
 			},
-			want: &service.RegisterServiceResp{
-				Code:    configs.GetString("auth.register.errors.INTERNAL.code"),
-				Message: "error",
-			},
+			want:    nil,
+			wantErr: true,
 		},
 		{
 			name: "Test register user error already exist user by email",
@@ -88,21 +83,19 @@ func Test_authService_Register(t *testing.T) {
 				config:     configs,
 				log:        log,
 				repository: mocks.NewMockRepository(false, true),
-				parsers:    parsers,
+				parsers:    nil,
 			},
 			args: args{
 				ctx: ctx,
-				userDto: &dtos.User{
+				user: &domain.User{
 					Id:       "",
 					Name:     "user",
 					Email:    "user@gmail.com",
 					Password: "aser34f34qf",
 				},
 			},
-			want: &service.RegisterServiceResp{
-				Code:    configs.GetString("auth.register.errors.USER_ALREADY_EXISTS.code"),
-				Message: configs.GetString("auth.register.errors.USER_ALREADY_EXISTS.message"),
-			},
+			want:    nil,
+			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
@@ -113,8 +106,13 @@ func Test_authService_Register(t *testing.T) {
 				repository: tt.fields.repository,
 				parsers:    tt.fields.parsers,
 			}
-			if got := s.Register(tt.args.ctx, tt.args.userDto); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Register() = %v, want %v", got, tt.want)
+			got, err := s.Register(tt.args.ctx, tt.args.user)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Register() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Register() got = %v, want %v", got, tt.want)
 			}
 		})
 	}

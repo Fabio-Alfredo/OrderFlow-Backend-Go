@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"Auth-Service/internal/parser"
 	"Auth-Service/internal/repository"
 	"Auth-Service/internal/service"
 	"Auth-Service/pkg/config"
@@ -14,7 +15,7 @@ func TestNewAuthService(t *testing.T) {
 		config     config.IConfig
 		log        logger.ILogger
 		repository repository.IUserRepository
-		parsers    service.IFactory
+		parsers    parser.IFactory
 	}
 	tests := []struct {
 		name string

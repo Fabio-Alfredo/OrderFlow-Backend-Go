@@ -1,20 +1,11 @@
 package service
 
 import (
-	"Auth-Service/internal/dtos"
+	"Auth-Service/internal/domain"
 	"context"
 )
 
 type IAuthService interface {
-	Register(ctx context.Context, user *dtos.User) *RegisterServiceResp
-	Login(ctx context.Context, req *dtos.LoginRequest) *dtos.LoginResponse
-}
-
-type IParser interface {
-	Parser(in ...any) (any, error)
-}
-
-type IFactory interface {
-	Set(key string, parser IParser) error
-	Get(key string) (parser IParser, err error)
+	Register(ctx context.Context, user *domain.User) (*domain.RegisterResult, error)
+	Login(ctx context.Context, authCredentials *domain.AuthCredentials) (*domain.LoginResult, error)
 }

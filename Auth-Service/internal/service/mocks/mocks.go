@@ -1,6 +1,7 @@
 package mocks
 
 import (
+	"Auth-Service/internal/domain"
 	"Auth-Service/internal/repository"
 	"context"
 	"errors"
@@ -19,9 +20,9 @@ func NewMockRepository(isError bool, existUser bool) repository.IUserRepository 
 	}
 }
 
-func (m *mockRepository) Save(ctx context.Context, data *repository.User) error {
+func (m *mockRepository) Save(_ context.Context, _ *domain.User) error {
 	if m.isError {
-		return errors.New("error")
+		return errors.New("error dummy")
 	}
 	return nil
 }
