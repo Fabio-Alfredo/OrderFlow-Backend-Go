@@ -31,7 +31,7 @@ func NewRegisterController(logger logger.ILogger, service service.IAuthService, 
 	}
 }
 
-func (c *registerController) controller(w http.ResponseWriter, r *http.Request) {
+func (c *registerController) Controller(w http.ResponseWriter, r *http.Request) {
 	var req *dtos.RegisterRequest
 
 	ctx := r.Context()

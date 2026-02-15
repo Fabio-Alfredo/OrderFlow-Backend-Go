@@ -9,12 +9,12 @@ var ErrUserNotFound = errors.New("user not found")
 
 type User struct {
 	Id       string    `gorm:"primary_key;column:id"`
-	Name     string    `gorm:"column:name"`
+	Name     string    `gorm:"column:username"`
 	Email    string    `gorm:"column:email"`
-	Password string    `gorm:"column:password"`
+	Password string    `gorm:"column:password_hash"`
 	Status   string    `gorm:"column:status"`
-	CreateAt time.Time `gorm:"column:create_at"`
-	UpdateAt time.Time `gorm:"column:update_at"`
+	CreateAt time.Time `gorm:"column:created_at;autoCreateTime"`
+	UpdateAt time.Time `gorm:"column:updated_at;autoUpdateTime"`
 }
 
-func (User) TableName() string { return "users_tb" }
+func (User) TableName() string { return "users" }

@@ -13,7 +13,7 @@ func (r *userRepository) FindEmail(ctx context.Context, email string) (*reposito
 	r.logger.Info(ctx, userRepositoryTitle+console.StartKey, "email", email)
 
 	var user repository.User
-	err := r.db.Table("users_tb").
+	err := r.db.
 		Where("email = ?", email).
 		First(&user).Error
 

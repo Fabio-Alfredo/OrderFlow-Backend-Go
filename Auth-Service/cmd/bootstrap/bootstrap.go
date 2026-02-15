@@ -1,7 +1,10 @@
 package bootstrap
 
 import (
+	"Auth-Service/internal/controller"
 	"Auth-Service/internal/database"
+	"Auth-Service/internal/repository/user"
+	"Auth-Service/internal/service/auth"
 	"Auth-Service/pkg/config"
 	"Auth-Service/pkg/logger"
 	"context"
@@ -20,18 +23,26 @@ func Init() {
 	}
 
 	port := configs.GetString("server.port")
+	basePath := configs.GetString("server.base-path")
+	registerPath := configs.GetString("server.register-path")
+
 	log := logger.NewLogger()
 	ctx := context.Background()
 
 	router := http.NewServeMux()
 
 	sqlDb := database.NewSQLConfig(configs)
-	_, err = sqlDb.GetDB()
+	db, err := sqlDb.GetDB()
 	if err != nil {
 		panic(err)
 	}
 
 	defer sqlDb.CloseDb()
+	parsers := setupParser(configs)
+	userRepository := user.NewUserRepository(configs, db, log, parsers)
+	registerService := auth.NewAuthService(configs, log, userRepository, parsers)
+	registerController := controller.NewRegisterController(log, registerService, parsers)
+	router.HandleFunc(basePath+registerPath, registerController.Controller)
 
 	signals := make(chan os.Signal)
 	errors := make(chan error)

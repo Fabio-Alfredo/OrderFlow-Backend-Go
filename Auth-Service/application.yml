@@ -1,5 +1,8 @@
 server:
     port: 8080
+    base-path: /api/v1/auth
+    register-path: /register
+    login-path: /login
 
 datasource:
   username: myuser

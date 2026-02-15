@@ -14,19 +14,19 @@ func (r *userRepository) Save(ctx context.Context, domainUser *domain.User) erro
 
 	parsed, err := mapper.Parser(domainUser)
 	if err != nil {
-		r.logger.Error(ctx, userRepositoryTitle+console.ErrorKey, err.Error())
+		r.logger.Error(ctx, userRepositoryTitle+console.ErrorKey, console.ErrorKey, err.Error())
 		return err
 	}
 	userModel := parsed.(*repository.User)
 
-	res := r.db.Table("users_tb").
+	res := r.db.
 		Create(userModel)
 
 	if err := res.Error; err != nil {
-		r.logger.Error(ctx, userRepositoryTitle+console.ErrorKey, "error", err)
+		r.logger.Error(ctx, userRepositoryTitle+console.ErrorKey, console.ErrorKey, err)
 		return err
 	}
 
-	r.logger.Info(ctx, userRepositoryTitle+console.EndKey, "rowsAffected", res.RowsAffected)
+	r.logger.Info(ctx, userRepositoryTitle+console.EndKey, console.RowsAffected, res.RowsAffected)
 	return nil
 }

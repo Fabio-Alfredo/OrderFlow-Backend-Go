@@ -35,6 +35,11 @@ func TestNewRegisterController(t *testing.T) {
 				service: mocks.NewServiceMock(false),
 				parsers: nil,
 			},
+			want: &registerController{
+				logger:  log,
+				service: mocks.NewServiceMock(false),
+				parsers: nil,
+			},
 		},
 	}
 	for _, tt := range tests {
@@ -137,7 +142,7 @@ func Test_registerController_controller(t *testing.T) {
 				service: tt.fields.service,
 				parsers: tt.fields.parsers,
 			}
-			c.controller(tt.args.w, tt.args.r)
+			c.Controller(tt.args.w, tt.args.r)
 			res := tt.args.w.(*httptest.ResponseRecorder).Result()
 			defer res.Body.Close()
 			if res.StatusCode != tt.wantHttp {
