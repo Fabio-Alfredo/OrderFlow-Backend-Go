@@ -39,8 +39,11 @@ func Init() {
 
 	defer sqlDb.CloseDb()
 	parsers := setupParser(configs)
+
 	userRepository := user.NewUserRepository(configs, db, log, parsers)
+
 	registerService := auth.NewAuthService(configs, log, userRepository, parsers)
+
 	registerController := controller.NewRegisterController(log, registerService, parsers)
 	router.HandleFunc(basePath+registerPath, registerController.Controller)
 

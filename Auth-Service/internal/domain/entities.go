@@ -1,5 +1,7 @@
 package domain
 
+import "time"
+
 type User struct {
 	Id       string
 	Name     string
@@ -21,4 +23,13 @@ type RegisterResult struct {
 type LoginResult struct {
 	Token       string
 	Description string
+}
+
+type Token struct {
+	Id        string
+	UserId    string
+	Token     string
+	ExpiresAt time.Time
+	IsActive  bool
+	TimesTamp time.Time
 }

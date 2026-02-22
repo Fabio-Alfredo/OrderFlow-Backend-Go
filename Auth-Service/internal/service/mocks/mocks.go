@@ -5,7 +5,6 @@ import (
 	"Auth-Service/internal/repository"
 	"context"
 	"errors"
-	"time"
 )
 
 type mockRepository struct {
@@ -27,16 +26,14 @@ func (m *mockRepository) Save(_ context.Context, _ *domain.User) error {
 	return nil
 }
 
-func (m *mockRepository) FindEmail(ctx context.Context, email string) (*repository.User, error) {
+func (m *mockRepository) FindEmail(ctx context.Context, email string) (*domain.User, error) {
 	if m.existUser {
-		return &repository.User{
+		return &domain.User{
 			Id:       "",
 			Name:     "",
 			Email:    "",
 			Password: "",
 			Status:   "",
-			CreateAt: time.Time{},
-			UpdateAt: time.Time{},
 		}, nil
 	}
 	return nil, nil
