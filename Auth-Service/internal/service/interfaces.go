@@ -9,3 +9,8 @@ type IAuthService interface {
 	Register(ctx context.Context, user *domain.User) (*domain.RegisterResult, error)
 	Login(ctx context.Context, authCredentials *domain.AuthCredentials) (*domain.LoginResult, error)
 }
+
+type JWTMethods interface {
+	GenerateJWT(user *domain.User) (string, error)
+	ValidateJWT(token string) (*domain.JWTClaims, error)
+}

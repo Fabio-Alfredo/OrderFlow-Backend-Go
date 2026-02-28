@@ -9,4 +9,5 @@ var (
 	ErrUnauthorized  = errors.New("unauthorized")
 	ErrForbidden     = errors.New("forbidden")
 	ErrInternal      = errors.New("internal error")
+	ErrInvalidToken  = errors.New("invalid token")
 )

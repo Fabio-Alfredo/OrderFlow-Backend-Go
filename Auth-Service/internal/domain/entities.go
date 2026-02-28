@@ -1,6 +1,10 @@
 package domain
 
-import "time"
+import (
+	"time"
+
+	"github.com/golang-jwt/jwt/v5"
+)
 
 type User struct {
 	Id       string
@@ -32,4 +36,9 @@ type Token struct {
 	ExpiresAt time.Time
 	IsActive  bool
 	TimesTamp time.Time
+}
+
+type JWTClaims struct {
+	UserId string
+	jwt.RegisteredClaims
 }

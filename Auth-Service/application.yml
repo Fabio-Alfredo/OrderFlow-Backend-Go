@@ -1,8 +1,8 @@
 server:
-    port: 8080
-    base-path: /api/v1/auth
-    register-path: /register
-    login-path: /login
+  port: 8080
+  base-path: /api/v1/auth
+  register-path: /register
+  login-path: /login
 
 datasource:
   username: myuser
@@ -16,6 +16,10 @@ datasource:
 auth:
   secure:
     hash_cost: 14
+  jwt:
+    secret: "your_jwt"
+    expiration: "48h"
+    issuer: "your-service"
   register:
     errors:
       USER_ALREADY_EXISTS:
