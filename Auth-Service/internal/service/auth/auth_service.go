@@ -15,6 +15,10 @@ import (
 	"github.com/google/uuid"
 )
 
+const (
+	registerServiceTitle = "register service: "
+)
+
 type authService struct {
 	config     config.IConfig
 	log        logger.ILogger
@@ -30,10 +34,6 @@ func NewAuthService(config config.IConfig, log logger.ILogger, repository reposi
 		parsers:    parsers,
 	}
 }
-
-const (
-	registerServiceTitle = "register service: "
-)
 
 func (s *authService) Register(ctx context.Context, user *domain.User) (*domain.RegisterResult, error) {
 	s.log.Info(ctx, registerServiceTitle+console.StartKey, console.RequestKey, obfuscate.RegisterService(*user))

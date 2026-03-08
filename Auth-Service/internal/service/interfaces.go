@@ -12,5 +12,11 @@ type IAuthService interface {
 
 type JWTMethods interface {
 	GenerateJWT(user *domain.User) (string, error)
-	ValidateJWT(token string) (*domain.JWTClaims, error)
+	ValidateJWT(token string) bool
+	GetClaims(tokenString string) (*domain.JWTClaims, error)
+}
+
+type ITokenService interface {
+	Register(ctx context.Context, userId string) (string, error)
+	IsValid(ctx context.Context, tokenString string, userId string) (bool, error)
 }

@@ -5,6 +5,7 @@ import (
 	"Auth-Service/internal/service"
 	"Auth-Service/pkg/config"
 	"Auth-Service/pkg/logger"
+	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -42,8 +43,35 @@ func (s *jWTService) GenerateJWT(user *domain.User) (string, error) {
 	return tokenString, nil
 }
 
-func (s *jWTService) ValidateJWT(tokenString string) (*domain.JWTClaims, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &domain.JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
+func (s *jWTService) ValidateJWT(tokenString string) bool {
+	_, err := s.parseToken(tokenString, &jwt.MapClaims{})
+
+	if err != nil {
+		return false
+	}
+
+	return true
+}
+
+func (s *jWTService) GetClaims(tokenString string) (*domain.JWTClaims, error) {
+	claims := &domain.JWTClaims{}
+
+	_, err := s.parseToken(tokenString, claims)
+	if err != nil {
+		return nil, err
+	}
+
+	return claims, nil
+}
+
+func (s *jWTService) parseToken(tokenString string, claims jwt.Claims) (*jwt.Token, error) {
+
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method")
+		}
+
 		return []byte(s.config.GetString("auth.jwt.secret")), nil
 	})
 
@@ -51,12 +79,11 @@ func (s *jWTService) ValidateJWT(tokenString string) (*domain.JWTClaims, error) 
 		return nil, err
 	}
 
-	claims, ok := token.Claims.(*domain.JWTClaims)
-	if !ok || !token.Valid {
-		return nil, domain.ErrNotFound
+	if !token.Valid {
+		return nil, fmt.Errorf("invalid token")
 	}
 
-	return claims, nil
+	return token, nil
 }
 
 func (s *jWTService) buildClaims(user *domain.User) (*domain.JWTClaims, error) {

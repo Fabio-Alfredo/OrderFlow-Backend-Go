@@ -98,7 +98,7 @@ func Test_jWTService_GenerateJWT(t *testing.T) {
 	}
 }
 
-func Test_jWTService_ValidateJWT(t *testing.T) {
+func Test_jWTService_ValidateJWT1(t *testing.T) {
 	configs, _ := config.Load("../../../")
 	log := logger.NewLogger()
 
@@ -107,6 +107,7 @@ func Test_jWTService_ValidateJWT(t *testing.T) {
 		Id: "1234",
 	}
 	tokenString, _ := ser.GenerateJWT(user)
+
 	type fields struct {
 		config config.IConfig
 		log    logger.ILogger
@@ -115,33 +116,32 @@ func Test_jWTService_ValidateJWT(t *testing.T) {
 		tokenString string
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		want    *domain.JWTClaims
-		wantErr bool
+		name   string
+		fields fields
+		args   args
+		want   bool
 	}{
 		{
-			name: "Validate JWT",
+			name: "ValidateJwt true",
 			fields: fields{
 				config: configs,
 				log:    log,
 			},
 			args: args{
-				tokenString: tokenString,
+				tokenString,
 			},
-			wantErr: false,
+			want: true,
 		},
 		{
-			name: "Validate JWT Fail",
+			name: "ValidateJwt false",
 			fields: fields{
 				config: configs,
 				log:    log,
 			},
 			args: args{
-				tokenString: "",
+				tokenString: "Dummy",
 			},
-			wantErr: true,
+			want: false,
 		},
 	}
 	for _, tt := range tests {
@@ -150,12 +150,9 @@ func Test_jWTService_ValidateJWT(t *testing.T) {
 				config: tt.fields.config,
 				log:    tt.fields.log,
 			}
-			_, err := s.ValidateJWT(tt.args.tokenString)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ValidateJWT() error = %v, wantErr %v", err, tt.wantErr)
-				return
+			if got := s.ValidateJWT(tt.args.tokenString); got != tt.want {
+				t.Errorf("ValidateJWT() = %v, want %v", got, tt.want)
 			}
-
 		})
 	}
 }
