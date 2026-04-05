@@ -11,6 +11,6 @@ type IUserRepository interface {
 }
 
 type ITokenRepository interface {
-	Save(ctx context.Context, data *domain.Token) (*domain.Token, error)
-	FindAllByUserAndActive(ctx context.Context, userId string, active bool) ([]domain.Token, error)
+	Save(ctx context.Context, data *domain.Token) error
+	FindByUserAndActive(ctx context.Context, userId string, active bool, tokenString string) (*domain.Token, error)
 }

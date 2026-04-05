@@ -7,26 +7,26 @@ import (
 	"errors"
 )
 
-type mockRepository struct {
+type userRepositoryMock struct {
 	isError   bool
 	existUser bool
 }
 
-func NewMockRepository(isError bool, existUser bool) repository.IUserRepository {
-	return &mockRepository{
+func NewUserRepositoryMock(isError bool, existUser bool) repository.IUserRepository {
+	return &userRepositoryMock{
 		isError:   isError,
 		existUser: existUser,
 	}
 }
 
-func (m *mockRepository) Save(_ context.Context, _ *domain.User) error {
+func (m *userRepositoryMock) Save(_ context.Context, _ *domain.User) error {
 	if m.isError {
 		return errors.New("error dummy")
 	}
 	return nil
 }
 
-func (m *mockRepository) FindEmail(ctx context.Context, email string) (*domain.User, error) {
+func (m *userRepositoryMock) FindEmail(ctx context.Context, email string) (*domain.User, error) {
 	if m.existUser {
 		return &domain.User{
 			Id:       "",

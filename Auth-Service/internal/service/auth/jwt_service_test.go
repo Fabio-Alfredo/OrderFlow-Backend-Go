@@ -18,7 +18,7 @@ func TestNewJWTService(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want service.JWTMethods
+		want service.IJWTMethods
 	}{
 		{
 			name: "TestNewJWTService",

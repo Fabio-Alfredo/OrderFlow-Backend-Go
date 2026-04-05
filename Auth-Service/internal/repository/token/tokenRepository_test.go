@@ -140,37 +140,34 @@ func Test_tokenRepository_Save(t *testing.T) {
 				logger:  tt.fields.logger,
 				parsers: tt.fields.parsers,
 			}
-			got, err := r.Save(tt.args.ctx, tt.args.data)
+			err := r.Save(tt.args.ctx, tt.args.data)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Save() error = %v, wantErr %v", err, tt.wantErr)
 				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Save() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func Test_tokenRepository_FindAllByUserAndActive(t *testing.T) {
+func Test_tokenRepository_FindByUserAndActive(t *testing.T) {
 	log := logger.NewLogger()
 	ctx := context.Background()
 
 	//Mock for success find
 	mockSucc, gdbSucc := mocks.GetDb()
-	rows := sqlmock.NewRows([]string{"id", "user_id", "token", "isActive"}).
+	rows := sqlmock.NewRows([]string{"id", "user_id", "token", "is_active"}).
 		AddRow("1", "1", "token1", true).
 		AddRow("2", "1", "token2", true)
 	mockSucc.ExpectQuery(regexp.QuoteMeta(
-		"SELECT * FROM `tokens` WHERE user_id = ? AND is_active = ?",
+		"SELECT * FROM `tokens` WHERE user_id = ? AND is_active = ? AND token = ?",
 	)).
-		WithArgs("1", true).
+		WithArgs("1", true, "token1", 1).
 		WillReturnRows(rows)
 
 	//Mock error find
 	mockErr, gdbErr := mocks.GetDb()
-	mockErr.ExpectQuery("SELECT * FROM `tokens` WHERE user_id = ? AND is_active = ? ").
-		WithArgs("1", true).
+	mockErr.ExpectQuery("SELECT * FROM `tokens` WHERE user_id = ? AND is_active = ? AND token = ? ").
+		WithArgs("1", true, "token1", 1).
 		WillReturnError(sqlmock.ErrCancelled)
 
 	parsers := factory.NewParserFactory()
@@ -181,46 +178,51 @@ func Test_tokenRepository_FindAllByUserAndActive(t *testing.T) {
 		parsers parser.IFactory
 	}
 	type args struct {
-		ctx    context.Context
-		userId string
-		active bool
+		ctx         context.Context
+		userId      string
+		active      bool
+		tokenString string
 	}
 	tests := []struct {
 		name    string
 		fields  fields
 		args    args
-		want    []domain.Token
+		want    *domain.Token
 		wantErr bool
 	}{
 		{
-			name: "Test FindAllByUserAndActive",
+			name: "Test FindByUserAndActive",
 			fields: fields{
 				db:      gdbSucc,
 				logger:  log,
 				parsers: parsers,
 			},
 			args: args{
-				ctx:    ctx,
-				userId: "1",
-				active: true,
+				ctx:         ctx,
+				userId:      "1",
+				active:      true,
+				tokenString: "token1",
 			},
-			want: []domain.Token{
-				{Id: "1", UserId: "1", Token: "token1", IsActive: true},
-				{Id: "2", UserId: "1", Token: "token2", IsActive: true},
+			want: &domain.Token{
+				Id:       "1",
+				UserId:   "1",
+				Token:    "token1",
+				IsActive: true,
 			},
 			wantErr: false,
 		},
 		{
-			name: "Test FindAllByUserAndActive Error",
+			name: "Test FindByUserAndActive Error",
 			fields: fields{
 				db:      gdbErr,
 				logger:  log,
 				parsers: parsers,
 			},
 			args: args{
-				ctx:    ctx,
-				userId: "1",
-				active: true,
+				ctx:         ctx,
+				userId:      "1",
+				active:      true,
+				tokenString: "token1",
 			},
 			want:    nil,
 			wantErr: true,
@@ -233,13 +235,13 @@ func Test_tokenRepository_FindAllByUserAndActive(t *testing.T) {
 				logger:  tt.fields.logger,
 				parsers: tt.fields.parsers,
 			}
-			got, err := r.FindAllByUserAndActive(tt.args.ctx, tt.args.userId, tt.args.active)
+			got, err := r.FindByUserAndActive(tt.args.ctx, tt.args.userId, tt.args.active, tt.args.tokenString)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("FindAllByUserAndActive() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("FindByUserAndActive() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("FindAllByUserAndActive() got = %v, want %v", got, tt.want)
+				t.Errorf("FindByUserAndActive() got = %v, want %v", got, tt.want)
 			}
 		})
 	}

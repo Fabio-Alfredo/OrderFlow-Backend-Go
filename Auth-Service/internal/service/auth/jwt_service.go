@@ -20,7 +20,7 @@ type jWTService struct {
 	log    logger.ILogger
 }
 
-func NewJWTService(config config.IConfig, log logger.ILogger) service.JWTMethods {
+func NewJWTService(config config.IConfig, log logger.ILogger) service.IJWTMethods {
 	return &jWTService{
 		config: config,
 		log:    log,

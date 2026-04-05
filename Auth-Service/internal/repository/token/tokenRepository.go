@@ -29,67 +29,57 @@ func NewTokenRepository(sqlDb *gorm.DB, logger logger.ILogger, parsers parser.IF
 	}
 }
 
-func (r *tokenRepository) Save(ctx context.Context, data *domain.Token) (*domain.Token, error) {
+func (r *tokenRepository) Save(ctx context.Context, data *domain.Token) error {
 	Parser, _ := r.parsers.Get(parser.TokenDomainToTokenRepositoryParser)
 	r.logger.Info(ctx, tokenRepositoryTitle+console.StartKey)
 
 	parsed, err := Parser.Parser(data)
 	if err != nil {
 		r.logger.Error(ctx, tokenRepositoryTitle+console.ErrorKey, console.ErrorKey, err.Error())
-		return nil, err
+		return err
 	}
 
 	token := parsed.(*repository.Token)
-
 	res := r.db.
-		Create(&token)
+		Save(&token)
 
 	if res.Error != nil {
 		r.logger.Error(ctx, tokenRepositoryTitle+console.ErrorKey, console.ErrorKey, res.Error)
-		return nil, res.Error
+		return res.Error
 	}
 
 	parserRes, _ := r.parsers.Get(parser.TokenRepositoryToTokenDomainParser)
 	parsed, err = parserRes.Parser(token)
 	if err != nil {
 		r.logger.Error(ctx, tokenRepositoryTitle+console.ErrorKey, console.ErrorKey, err.Error())
-		return nil, err
+		return err
 	}
 
-	return parsed.(*domain.Token), nil
+	return nil
 }
 
-func (r *tokenRepository) FindAllByUserAndActive(ctx context.Context, userId string, active bool) ([]domain.Token, error) {
+func (r *tokenRepository) FindByUserAndActive(ctx context.Context, userId string, active bool, tokenString string) (*domain.Token, error) {
 	r.logger.Info(ctx, tokenRepositoryTitle+console.StartKey)
 
-	var tokens []repository.Token
+	var token repository.Token
 	err := r.db.
-		Where("user_id = ? AND is_active = ?", userId, active).
-		Find(&tokens).Error
+		Where("user_id = ? AND is_active = ? AND token = ?", userId, active, tokenString).
+		Take(&token).Error
 
 	if err != nil {
 		r.logger.Error(ctx, tokenRepositoryTitle+console.ErrorKey, console.ErrorKey, err)
 		return nil, err
 	}
 
-	resp, err := r.parsedTokens(tokens)
+	Parser, _ := r.parsers.Get(parser.TokenRepositoryToTokenDomainParser)
+	parsed, err := Parser.Parser(&token)
 	if err != nil {
 		r.logger.Error(ctx, tokenRepositoryTitle+console.ErrorKey, console.ErrorKey, err.Error())
 		return nil, err
 	}
+
+	resp := parsed.(*domain.Token)
+
+	r.logger.Info(ctx, tokenRepositoryTitle+console.EndKey, console.ResponseKey, resp)
 	return resp, nil
-}
-
-func (r *tokenRepository) parsedTokens(tokens []repository.Token) ([]domain.Token, error) {
-	var tokensDomain []domain.Token
-	Parser, _ := r.parsers.Get(parser.TokenRepositoryToTokenDomainParser)
-
-	for _, token := range tokens {
-		parsed, err := Parser.Parser(&token)
-		if err != nil {
-			return nil, err
-		}
-		tokensDomain = append(tokensDomain, *parsed.(*domain.Token))
-	}
-	return tokensDomain, nil
 }

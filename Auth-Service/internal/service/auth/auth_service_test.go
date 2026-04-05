@@ -72,7 +72,7 @@ func Test_authService_Register(t *testing.T) {
 			fields: fields{
 				config:     configs,
 				log:        log,
-				repository: mocks.NewMockRepository(false, false),
+				repository: mocks.NewUserRepositoryMock(false, false),
 				parsers:    nil,
 			},
 			args: args{
@@ -95,7 +95,7 @@ func Test_authService_Register(t *testing.T) {
 			fields: fields{
 				config:     configs,
 				log:        log,
-				repository: mocks.NewMockRepository(true, false),
+				repository: mocks.NewUserRepositoryMock(true, false),
 				parsers:    nil,
 			},
 			args: args{
@@ -115,7 +115,7 @@ func Test_authService_Register(t *testing.T) {
 			fields: fields{
 				config:     configs,
 				log:        log,
-				repository: mocks.NewMockRepository(false, true),
+				repository: mocks.NewUserRepositoryMock(false, true),
 				parsers:    nil,
 			},
 			args: args{
