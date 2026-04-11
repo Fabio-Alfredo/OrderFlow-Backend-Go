@@ -1,7 +1,7 @@
 package console
 
 import (
-	"Auth-Service/internal/dtos"
+	"Auth-Service/internal/domain/dtos"
 	"context"
 )
 

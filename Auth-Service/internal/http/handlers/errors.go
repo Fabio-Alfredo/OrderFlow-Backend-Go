@@ -2,7 +2,7 @@ package handlers
 
 import (
 	error2 "Auth-Service/internal/domain"
-	"Auth-Service/internal/dtos"
+	"Auth-Service/internal/domain/dtos"
 	"encoding/json"
 	"errors"
 	"log"

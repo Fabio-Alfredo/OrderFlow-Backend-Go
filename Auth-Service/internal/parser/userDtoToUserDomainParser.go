@@ -2,7 +2,7 @@ package parser
 
 import (
 	"Auth-Service/internal/domain"
-	"Auth-Service/internal/dtos"
+	"Auth-Service/internal/domain/dtos"
 )
 
 const (

@@ -45,6 +45,10 @@ func (l *logger) Error(ctx context.Context, msg string, keysAndValues ...any) {
 	l.log.With(l.attrsFromCtx(ctx)...).Log(ctx, slog.LevelError, msg, keysAndValues...)
 }
 
+func (l *logger) Warning(ctx context.Context, msg string, keysAndValues ...any) {
+	l.log.With(l.attrsFromCtx(ctx)...).Log(ctx, slog.LevelWarn, msg, keysAndValues...)
+}
+
 // withTraceID adds a trace ID to the context for logging.
 func (l *logger) withTraceID(ctx context.Context, traceID string) context.Context {
 	return context.WithValue(ctx, traceIDKey, traceID)

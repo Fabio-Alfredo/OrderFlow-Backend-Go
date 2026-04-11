@@ -2,7 +2,7 @@ package controller
 
 import (
 	"Auth-Service/internal/controller/mocks"
-	"Auth-Service/internal/dtos"
+	"Auth-Service/internal/domain/dtos"
 	"Auth-Service/internal/parser"
 	"Auth-Service/internal/parser/factory"
 	"Auth-Service/internal/service"

@@ -2,7 +2,7 @@ package controller
 
 import (
 	"Auth-Service/internal/domain"
-	"Auth-Service/internal/dtos"
+	"Auth-Service/internal/domain/dtos"
 	"Auth-Service/internal/http/handlers"
 	"Auth-Service/internal/parser"
 	"Auth-Service/internal/service"
@@ -63,6 +63,7 @@ func (c *registerController) Controller(w http.ResponseWriter, r *http.Request) 
 
 	serviceResp, err := c.service.Register(ctx, user.(*domain.User))
 	if err != nil {
+		c.logger.Warning(ctx, registerControllerTitle, console.ErrorKey, err)
 		handlers.HandleHttpError(w, err)
 		return
 	}
