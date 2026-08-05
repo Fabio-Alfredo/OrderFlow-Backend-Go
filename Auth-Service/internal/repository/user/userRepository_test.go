@@ -2,8 +2,7 @@ package user
 
 import (
 	"Auth-Service/internal/domain"
-	"Auth-Service/internal/parser"
-	"Auth-Service/internal/parser/factory"
+	"Auth-Service/internal/domain/models"
 	"Auth-Service/internal/repository"
 	"Auth-Service/internal/repository/mocks"
 	"Auth-Service/pkg/config"
@@ -23,10 +22,9 @@ func TestNewUserRepository(t *testing.T) {
 	log := logger.NewLogger()
 
 	type args struct {
-		config  config.IConfig
-		sqlDb   *gorm.DB
-		logger  logger.ILogger
-		parsers parser.IFactory
+		config config.IConfig
+		sqlDb  *gorm.DB
+		logger logger.ILogger
 	}
 	tests := []struct {
 		name string
@@ -36,22 +34,20 @@ func TestNewUserRepository(t *testing.T) {
 		{
 			name: "Test for New User Repository",
 			args: args{
-				config:  configs,
-				sqlDb:   nil,
-				logger:  log,
-				parsers: nil,
+				config: configs,
+				sqlDb:  nil,
+				logger: log,
 			},
 			want: &userRepository{
-				config:  configs,
-				db:      nil,
-				logger:  log,
-				parsers: nil,
+				config: configs,
+				db:     nil,
+				logger: log,
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewUserRepository(tt.args.config, tt.args.sqlDb, tt.args.logger, tt.args.parsers); !reflect.DeepEqual(got, tt.want) {
+			if got := NewUserRepository(tt.args.config, tt.args.sqlDb, tt.args.logger); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewUserRepository() = %v, want %v", got, tt.want)
 			}
 		})
@@ -85,14 +81,10 @@ func Test_userRepository_FindEmail(t *testing.T) {
 		WithArgs("not-found", 1).
 		WillReturnError(errorDummy)
 
-	parsers := factory.NewParserFactory()
-	_ = parsers.Set(parser.UserRepositoryToUserDomainParser, parser.NewUserRepositoryToUserDomainParser())
-
 	type fields struct {
-		config  config.IConfig
-		db      *gorm.DB
-		logger  logger.ILogger
-		parsers parser.IFactory
+		config config.IConfig
+		db     *gorm.DB
+		logger logger.ILogger
 	}
 	type args struct {
 		ctx   context.Context
@@ -108,16 +100,15 @@ func Test_userRepository_FindEmail(t *testing.T) {
 		{
 			name: "Test for find user Success",
 			fields: fields{
-				config:  configs,
-				db:      gdbSucc,
-				logger:  log,
-				parsers: parsers,
+				config: configs,
+				db:     gdbSucc,
+				logger: log,
 			},
 			args: args{
 				ctx:   ctx,
 				email: "user@gmail.com",
 			},
-			want: &domain.User{
+			want: &models.User{
 				Id:       "1234",
 				Name:     "user",
 				Email:    "user@gmail.com",
@@ -129,25 +120,23 @@ func Test_userRepository_FindEmail(t *testing.T) {
 		{
 			name: "Test for find user Error",
 			fields: fields{
-				config:  configs,
-				db:      gdbErr,
-				logger:  log,
-				parsers: parsers,
+				config: configs,
+				db:     gdbErr,
+				logger: log,
 			},
 			args: args{
 				ctx:   ctx,
 				email: "not-email",
 			},
-			want:    repository.ErrUserNotFound,
+			want:    domain.ErrUserNotFound,
 			wantErr: true,
 		},
 		{
 			name: "Test for find user Error repository",
 			fields: fields{
-				config:  configs,
-				db:      gdbErrR,
-				logger:  log,
-				parsers: parsers,
+				config: configs,
+				db:     gdbErrR,
+				logger: log,
 			},
 			args: args{
 				ctx:   ctx,
@@ -160,10 +149,9 @@ func Test_userRepository_FindEmail(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := &userRepository{
-				config:  tt.fields.config,
-				db:      tt.fields.db,
-				logger:  tt.fields.logger,
-				parsers: tt.fields.parsers,
+				config: tt.fields.config,
+				db:     tt.fields.db,
+				logger: tt.fields.logger,
 			}
 			got, err := r.FindEmail(tt.args.ctx, tt.args.email)
 
@@ -207,19 +195,14 @@ func Test_userRepository_Save(t *testing.T) {
 		WillReturnResult(sqlmock.NewResult(1, 1))
 	mockSucc.ExpectCommit()
 
-	parsers := factory.NewParserFactory()
-	userRepoParser := parser.NewUserDomainToUserRepositoryParser(configs)
-	_ = parsers.Set(parser.UserDomainToUserRepositoryParser, userRepoParser)
-
 	type fields struct {
-		config  config.IConfig
-		db      *gorm.DB
-		logger  logger.ILogger
-		parsers parser.IFactory
+		config config.IConfig
+		db     *gorm.DB
+		logger logger.ILogger
 	}
 	type args struct {
 		ctx  context.Context
-		data *domain.User
+		data *models.User
 	}
 	tests := []struct {
 		name    string
@@ -231,14 +214,13 @@ func Test_userRepository_Save(t *testing.T) {
 		{
 			name: "Test for Save User Error",
 			fields: fields{
-				config:  configs,
-				db:      gdbErr,
-				logger:  log,
-				parsers: parsers,
+				config: configs,
+				db:     gdbErr,
+				logger: log,
 			},
 			args: args{
 				ctx: ctx,
-				data: &domain.User{
+				data: &models.User{
 					Name:     "User",
 					Email:    "user@gmail.com",
 					Password: "fujew9ru98re34",
@@ -251,14 +233,13 @@ func Test_userRepository_Save(t *testing.T) {
 		{
 			name: "Test for Save User Success",
 			fields: fields{
-				config:  configs,
-				db:      gdbSucc,
-				logger:  log,
-				parsers: parsers,
+				config: configs,
+				db:     gdbSucc,
+				logger: log,
 			},
 			args: args{
 				ctx: ctx,
-				data: &domain.User{
+				data: &models.User{
 					Name:     "User",
 					Email:    "user@gmail.com",
 					Password: "fujew9ru98re34",
@@ -272,10 +253,9 @@ func Test_userRepository_Save(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := &userRepository{
-				config:  tt.fields.config,
-				db:      tt.fields.db,
-				logger:  tt.fields.logger,
-				parsers: tt.fields.parsers,
+				config: tt.fields.config,
+				db:     tt.fields.db,
+				logger: tt.fields.logger,
 			}
 			got := r.Save(tt.args.ctx, tt.args.data)
 			if (got != nil) != tt.wantErr {

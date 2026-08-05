@@ -1,9 +1,8 @@
 package token
 
 import (
-	"Auth-Service/internal/domain"
+	"Auth-Service/internal/domain/models"
 	"Auth-Service/internal/parser"
-	"Auth-Service/internal/parser/factory"
 	"Auth-Service/internal/repository"
 	"Auth-Service/internal/repository/mocks"
 	"Auth-Service/pkg/logger"
@@ -70,9 +69,6 @@ func Test_tokenRepository_Save(t *testing.T) {
 		WillReturnError(sqlmock.ErrCancelled)
 	mockErr.ExpectRollback()
 
-	parsers := factory.NewParserFactory()
-	_ = parsers.Set(parser.TokenDomainToTokenRepositoryParser, parser.NewTokenDomainToTokenRepositoryParser())
-	_ = parsers.Set(parser.TokenRepositoryToTokenDomainParser, parser.NewTokenRepositoryToTokenDomainParser())
 	type fields struct {
 		db      *gorm.DB
 		logger  logger.ILogger
@@ -80,34 +76,31 @@ func Test_tokenRepository_Save(t *testing.T) {
 	}
 	type args struct {
 		ctx  context.Context
-		data *domain.Token
+		data *models.Token
 	}
 	tests := []struct {
 		name    string
 		fields  fields
 		args    args
-		want    *domain.Token
+		want    *models.Token
 		wantErr bool
 	}{
 		{
 			name: "Test Save Token",
 			fields: fields{
-				db:      gdbSucc,
-				logger:  log,
-				parsers: parsers,
+				db:     gdbSucc,
+				logger: log,
 			},
 			args: args{
 				ctx: ctx,
-				data: &domain.Token{
+				data: &models.Token{
 					Id:       "1",
-					UserId:   "1",
 					Token:    "token",
 					IsActive: true,
 				},
 			},
-			want: &domain.Token{
+			want: &models.Token{
 				Id:       "1",
-				UserId:   "1",
 				Token:    "token",
 				IsActive: true,
 			},
@@ -116,15 +109,13 @@ func Test_tokenRepository_Save(t *testing.T) {
 		{
 			name: "Test Save Token Error",
 			fields: fields{
-				db:      gdbErr,
-				logger:  log,
-				parsers: parsers,
+				db:     gdbErr,
+				logger: log,
 			},
 			args: args{
 				ctx: ctx,
-				data: &domain.Token{
+				data: &models.Token{
 					Id:       "1",
-					UserId:   "1",
 					Token:    "token",
 					IsActive: true,
 				},
@@ -170,8 +161,6 @@ func Test_tokenRepository_FindByUserAndActive(t *testing.T) {
 		WithArgs("1", true, "token1", 1).
 		WillReturnError(sqlmock.ErrCancelled)
 
-	parsers := factory.NewParserFactory()
-	_ = parsers.Set(parser.TokenRepositoryToTokenDomainParser, parser.NewTokenRepositoryToTokenDomainParser())
 	type fields struct {
 		db      *gorm.DB
 		logger  logger.ILogger
@@ -187,15 +176,14 @@ func Test_tokenRepository_FindByUserAndActive(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    *domain.Token
+		want    *models.Token
 		wantErr bool
 	}{
 		{
 			name: "Test FindByUserAndActive",
 			fields: fields{
-				db:      gdbSucc,
-				logger:  log,
-				parsers: parsers,
+				db:     gdbSucc,
+				logger: log,
 			},
 			args: args{
 				ctx:         ctx,
@@ -203,20 +191,19 @@ func Test_tokenRepository_FindByUserAndActive(t *testing.T) {
 				active:      true,
 				tokenString: "token1",
 			},
-			want: &domain.Token{
+			want: &models.Token{
 				Id:       "1",
-				UserId:   "1",
 				Token:    "token1",
 				IsActive: true,
+				UserId:   "1",
 			},
 			wantErr: false,
 		},
 		{
 			name: "Test FindByUserAndActive Error",
 			fields: fields{
-				db:      gdbErr,
-				logger:  log,
-				parsers: parsers,
+				db:     gdbErr,
+				logger: log,
 			},
 			args: args{
 				ctx:         ctx,

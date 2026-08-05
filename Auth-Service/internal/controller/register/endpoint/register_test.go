@@ -5,6 +5,7 @@ import (
 	"Auth-Service/internal/domain/dtos"
 	"Auth-Service/internal/parser"
 	"Auth-Service/internal/parser/factory"
+	service2 "Auth-Service/internal/parser/service"
 	"Auth-Service/internal/service"
 	"Auth-Service/pkg/logger"
 	"bytes"
@@ -55,7 +56,7 @@ func Test_registerController_controller(t *testing.T) {
 	log := logger.NewLogger()
 
 	parsers := factory.NewParserFactory()
-	_ = parsers.Set(parser.UserDtoToUserDomainParser, parser.NewUserDtoToUserDomainParser())
+	_ = parsers.Set(service2.UserDtoToUserDomainParser, service2.NewUserDtoToUserDomainParser())
 
 	type fields struct {
 		logger  logger.ILogger

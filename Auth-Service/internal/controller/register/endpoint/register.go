@@ -5,6 +5,7 @@ import (
 	"Auth-Service/internal/domain/dtos"
 	"Auth-Service/internal/http/handlers"
 	"Auth-Service/internal/parser"
+	serverParser "Auth-Service/internal/parser/service"
 	"Auth-Service/internal/service"
 	"Auth-Service/pkg/logger"
 	"Auth-Service/pkg/logger/console"
@@ -53,7 +54,7 @@ func (c *registerController) Controller(w http.ResponseWriter, r *http.Request) 
 	ctx = console.SetContextWithRegister(ctx, req)
 	c.logger.Info(ctx, registerControllerTitle, console.RequestKey, obfuscate.RegisterController(*req))
 
-	Parser, _ := c.parsers.Get(parser.UserDtoToUserDomainParser)
+	Parser, _ := c.parsers.Get(serverParser.UserDtoToUserDomainParser)
 	user, err := Parser.Parser(req)
 	if err != nil {
 		c.logger.Error(ctx, registerControllerTitle, console.ErrorKey, err)

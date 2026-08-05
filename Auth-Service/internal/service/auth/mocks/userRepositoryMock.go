@@ -32,7 +32,7 @@ func (m *userRepositoryMock) FindEmail(ctx context.Context, email string) (*doma
 			Id:       "",
 			Name:     "",
 			Email:    "",
-			Password: "",
+			Password: "$2a$14$ZJ6FnyRQIMFAw/7XSY48HuTTVb8h1rsCpw0d/.XppjADX7sOfvd66",
 			Status:   "",
 		}, nil
 	}

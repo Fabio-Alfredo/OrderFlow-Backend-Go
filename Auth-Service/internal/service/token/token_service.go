@@ -46,7 +46,6 @@ func (s *tokenService) Register(ctx context.Context, user *domain.User) (string,
 	}
 
 	token := &domain.Token{
-		UserId:   user.Id,
 		Token:    tokenString,
 		IsActive: true,
 	}
