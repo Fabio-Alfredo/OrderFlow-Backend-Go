@@ -15,4 +15,5 @@ const (
 	FailedKey    = "failed"
 	DataKey      = "data"
 	RowsAffected = "rows_affected"
+	SuccessKey   = "success"
 )

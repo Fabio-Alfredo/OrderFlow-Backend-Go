@@ -11,10 +11,9 @@ const (
 	charObfuscatePass = "[REDACTED]"
 )
 
-// Register Method for obfuscate password in register user
-func RegisterService(user models.User) models.User {
-	user.Password = charObfuscatePass
-	return user
+func AuthCredentials(req dtos.LoginRequest) dtos.LoginRequest {
+	req.Password = charObfuscatePass
+	return req
 }
 
 func RegisterController(req dtos.RegisterRequest) dtos.RegisterRequest {
