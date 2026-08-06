@@ -1,11 +1,11 @@
-package auth
+package token
 
 import (
-	"Auth-Service/internal/domain"
-	"Auth-Service/internal/parser"
+	"Auth-Service/internal/domain/models"
 	"Auth-Service/internal/repository"
+	"Auth-Service/internal/security"
 	"Auth-Service/internal/service"
-	"Auth-Service/internal/service/mocks"
+	"Auth-Service/internal/service/token/mocks"
 	"Auth-Service/pkg/config"
 	"Auth-Service/pkg/logger"
 	"context"
@@ -21,8 +21,7 @@ func TestNewTokenService(t *testing.T) {
 		config     config.IConfig
 		log        logger.ILogger
 		repository repository.ITokenRepository
-		jwtMethods service.IJWTMethods
-		parsers    parser.IFactory
+		jwtMethods security.IJWTMethods
 	}
 	tests := []struct {
 		name string
@@ -43,7 +42,7 @@ func TestNewTokenService(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewTokenService(tt.args.config, tt.args.log, tt.args.repository, tt.args.jwtMethods, tt.args.parsers); !reflect.DeepEqual(got, tt.want) {
+			if got := NewTokenService(tt.args.config, tt.args.log, tt.args.repository, tt.args.jwtMethods); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewTokenService() = %v, want %v", got, tt.want)
 			}
 		})
@@ -59,12 +58,11 @@ func Test_tokenService_Register(t *testing.T) {
 		config     config.IConfig
 		log        logger.ILogger
 		repository repository.ITokenRepository
-		jwtMethods service.IJWTMethods
-		parsers    parser.IFactory
+		jwtMethods security.IJWTMethods
 	}
 	type args struct {
 		ctx  context.Context
-		user *domain.User
+		user *models.User
 	}
 	tests := []struct {
 		name    string
@@ -80,11 +78,10 @@ func Test_tokenService_Register(t *testing.T) {
 				log:        log,
 				repository: mocks.NewTokenRepositoryMock(false),
 				jwtMethods: mocks.NewJwtMethodsMock(false),
-				parsers:    nil,
 			},
 			args: args{
 				ctx: ctx,
-				user: &domain.User{
+				user: &models.User{
 					Id:       "1",
 					Name:     "Test",
 					Email:    "test@example.com",
@@ -102,11 +99,10 @@ func Test_tokenService_Register(t *testing.T) {
 				log:        log,
 				repository: mocks.NewTokenRepositoryMock(false),
 				jwtMethods: mocks.NewJwtMethodsMock(true),
-				parsers:    nil,
 			},
 			args: args{
 				ctx: ctx,
-				user: &domain.User{
+				user: &models.User{
 					Id:       "1",
 					Name:     "Test",
 					Email:    "test@example.com",
@@ -125,7 +121,6 @@ func Test_tokenService_Register(t *testing.T) {
 				log:        tt.fields.log,
 				repository: tt.fields.repository,
 				jwtMethods: tt.fields.jwtMethods,
-				parsers:    tt.fields.parsers,
 			}
 			got, err := s.Register(tt.args.ctx, tt.args.user)
 			if (err != nil) != tt.wantErr {
@@ -148,8 +143,7 @@ func Test_tokenService_IsValid(t *testing.T) {
 		config     config.IConfig
 		log        logger.ILogger
 		repository repository.ITokenRepository
-		jwtMethods service.IJWTMethods
-		parsers    parser.IFactory
+		jwtMethods security.IJWTMethods
 	}
 	type args struct {
 		ctx         context.Context
@@ -170,7 +164,6 @@ func Test_tokenService_IsValid(t *testing.T) {
 				log:        log,
 				repository: mocks.NewTokenRepositoryMock(false),
 				jwtMethods: mocks.NewJwtMethodsMock(false),
-				parsers:    nil,
 			},
 			args: args{
 				ctx:         ctx,
@@ -187,7 +180,6 @@ func Test_tokenService_IsValid(t *testing.T) {
 				log:        log,
 				repository: mocks.NewTokenRepositoryMock(false),
 				jwtMethods: mocks.NewJwtMethodsMock(true),
-				parsers:    nil,
 			},
 			args: args{
 				ctx:         ctx,
@@ -204,7 +196,6 @@ func Test_tokenService_IsValid(t *testing.T) {
 				log:        log,
 				repository: mocks.NewTokenRepositoryMock(true),
 				jwtMethods: mocks.NewJwtMethodsMock(false),
-				parsers:    nil,
 			},
 			args: args{
 				ctx:         ctx,
@@ -222,7 +213,6 @@ func Test_tokenService_IsValid(t *testing.T) {
 				log:        tt.fields.log,
 				repository: tt.fields.repository,
 				jwtMethods: tt.fields.jwtMethods,
-				parsers:    tt.fields.parsers,
 			}
 			got, err := s.IsValid(tt.args.ctx, tt.args.tokenString, tt.args.userId)
 			if (err != nil) != tt.wantErr {

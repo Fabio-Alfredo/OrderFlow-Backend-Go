@@ -1,7 +1,7 @@
 package mocks
 
 import (
-	"Auth-Service/internal/domain"
+	"Auth-Service/internal/domain/models"
 	"Auth-Service/internal/repository"
 	"context"
 	"errors"
@@ -19,16 +19,16 @@ func NewUserRepositoryMock(isError bool, existUser bool) repository.IUserReposit
 	}
 }
 
-func (m *userRepositoryMock) Save(_ context.Context, _ *domain.User) error {
+func (m *userRepositoryMock) Save(_ context.Context, _ *models.User) error {
 	if m.isError {
 		return errors.New("error dummy")
 	}
 	return nil
 }
 
-func (m *userRepositoryMock) FindEmail(ctx context.Context, email string) (*domain.User, error) {
+func (m *userRepositoryMock) FindEmail(_ context.Context, _ string) (*models.User, error) {
 	if m.existUser {
-		return &domain.User{
+		return &models.User{
 			Id:       "",
 			Name:     "",
 			Email:    "",

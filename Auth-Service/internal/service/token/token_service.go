@@ -1,9 +1,9 @@
-package auth
+package token
 
 import (
-	"Auth-Service/internal/domain"
-	"Auth-Service/internal/parser"
+	"Auth-Service/internal/domain/models"
 	"Auth-Service/internal/repository"
+	"Auth-Service/internal/security"
 	"Auth-Service/internal/service"
 	"Auth-Service/pkg/config"
 	"Auth-Service/pkg/logger"
@@ -22,21 +22,19 @@ type tokenService struct {
 	config     config.IConfig
 	log        logger.ILogger
 	repository repository.ITokenRepository
-	jwtMethods service.IJWTMethods
-	parsers    parser.IFactory
+	jwtMethods security.IJWTMethods
 }
 
-func NewTokenService(config config.IConfig, log logger.ILogger, repository repository.ITokenRepository, jwtMethods service.IJWTMethods, parsers parser.IFactory) service.ITokenService {
+func NewTokenService(config config.IConfig, log logger.ILogger, repository repository.ITokenRepository, jwtMethods security.IJWTMethods) service.ITokenService {
 	return &tokenService{
 		config:     config,
 		log:        log,
 		repository: repository,
 		jwtMethods: jwtMethods,
-		parsers:    parsers,
 	}
 }
 
-func (s *tokenService) Register(ctx context.Context, user *domain.User) (string, error) {
+func (s *tokenService) Register(ctx context.Context, user *models.User) (string, error) {
 	s.log.Info(ctx, tokenServiceTitle+console.StartKey, console.RequestKey, user)
 
 	tokenString, err := s.jwtMethods.GenerateJWT(user)
@@ -45,7 +43,7 @@ func (s *tokenService) Register(ctx context.Context, user *domain.User) (string,
 		return "", err
 	}
 
-	token := &domain.Token{
+	token := &models.Token{
 		Token:    tokenString,
 		IsActive: true,
 	}
@@ -83,11 +81,11 @@ func (s *tokenService) IsValid(ctx context.Context, tokenString string, userId s
 	return true, nil
 }
 
-func (s *tokenService) isValidToken(token *domain.Token) bool {
+func (s *tokenService) isValidToken(token *models.Token) bool {
 	return token != nil && s.jwtMethods.ValidateJWT(token.Token)
 }
 
-func (s *tokenService) cleanToken(ctx context.Context, token *domain.Token) {
+func (s *tokenService) cleanToken(ctx context.Context, token *models.Token) {
 	s.log.Info(ctx, tokenServiceTitle+console.StartKey)
 	if token != nil {
 		token.IsActive = false

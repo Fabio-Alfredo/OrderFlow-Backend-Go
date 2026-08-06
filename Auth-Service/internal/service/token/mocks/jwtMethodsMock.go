@@ -1,8 +1,8 @@
 package mocks
 
 import (
-	"Auth-Service/internal/domain"
-	"Auth-Service/internal/service"
+	"Auth-Service/internal/domain/models"
+	"Auth-Service/internal/security"
 	"errors"
 )
 
@@ -10,13 +10,13 @@ type jwtMethodsMock struct {
 	isError bool
 }
 
-func NewJwtMethodsMock(isError bool) service.IJWTMethods {
+func NewJwtMethodsMock(isError bool) security.IJWTMethods {
 	return &jwtMethodsMock{
 		isError: isError,
 	}
 }
 
-func (j *jwtMethodsMock) GenerateJWT(_ *domain.User) (string, error) {
+func (j *jwtMethodsMock) GenerateJWT(_ *models.User) (string, error) {
 	if j.isError {
 		return "", errors.New("error")
 	}
@@ -30,6 +30,6 @@ func (j *jwtMethodsMock) ValidateJWT(_ string) bool {
 	return true
 }
 
-func (j *jwtMethodsMock) GetClaims(_ string) (*domain.JWTClaims, error) {
+func (j *jwtMethodsMock) GetClaims(_ string) (*security.JWTClaims, error) {
 	return nil, nil
 }
