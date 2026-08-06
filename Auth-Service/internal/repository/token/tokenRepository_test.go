@@ -2,7 +2,6 @@ package token
 
 import (
 	"Auth-Service/internal/domain/models"
-	"Auth-Service/internal/parser"
 	"Auth-Service/internal/repository"
 	"Auth-Service/internal/repository/mocks"
 	"Auth-Service/pkg/logger"
@@ -19,9 +18,8 @@ func TestNewTokenRepository(t *testing.T) {
 	log := logger.NewLogger()
 
 	type args struct {
-		sqlDb   *gorm.DB
-		logger  logger.ILogger
-		parsers parser.IFactory
+		sqlDb  *gorm.DB
+		logger logger.ILogger
 	}
 	tests := []struct {
 		name string
@@ -31,20 +29,18 @@ func TestNewTokenRepository(t *testing.T) {
 		{
 			name: "Test for New Token Repository",
 			args: args{
-				sqlDb:   nil,
-				logger:  log,
-				parsers: nil,
+				sqlDb:  nil,
+				logger: log,
 			},
 			want: &tokenRepository{
-				db:      nil,
-				logger:  log,
-				parsers: nil,
+				db:     nil,
+				logger: log,
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewTokenRepository(tt.args.sqlDb, tt.args.logger, tt.args.parsers); !reflect.DeepEqual(got, tt.want) {
+			if got := NewTokenRepository(tt.args.sqlDb, tt.args.logger); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewTokenRepository() = %v, want %v", got, tt.want)
 			}
 		})
@@ -70,9 +66,8 @@ func Test_tokenRepository_Save(t *testing.T) {
 	mockErr.ExpectRollback()
 
 	type fields struct {
-		db      *gorm.DB
-		logger  logger.ILogger
-		parsers parser.IFactory
+		db     *gorm.DB
+		logger logger.ILogger
 	}
 	type args struct {
 		ctx  context.Context
@@ -127,9 +122,8 @@ func Test_tokenRepository_Save(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := &tokenRepository{
-				db:      tt.fields.db,
-				logger:  tt.fields.logger,
-				parsers: tt.fields.parsers,
+				db:     tt.fields.db,
+				logger: tt.fields.logger,
 			}
 			err := r.Save(tt.args.ctx, tt.args.data)
 			if (err != nil) != tt.wantErr {
@@ -162,9 +156,8 @@ func Test_tokenRepository_FindByUserAndActive(t *testing.T) {
 		WillReturnError(sqlmock.ErrCancelled)
 
 	type fields struct {
-		db      *gorm.DB
-		logger  logger.ILogger
-		parsers parser.IFactory
+		db     *gorm.DB
+		logger logger.ILogger
 	}
 	type args struct {
 		ctx         context.Context
@@ -218,9 +211,8 @@ func Test_tokenRepository_FindByUserAndActive(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := &tokenRepository{
-				db:      tt.fields.db,
-				logger:  tt.fields.logger,
-				parsers: tt.fields.parsers,
+				db:     tt.fields.db,
+				logger: tt.fields.logger,
 			}
 			got, err := r.FindByUserAndActive(tt.args.ctx, tt.args.userId, tt.args.active, tt.args.tokenString)
 			if (err != nil) != tt.wantErr {

@@ -2,7 +2,6 @@ package token
 
 import (
 	"Auth-Service/internal/domain/models"
-	"Auth-Service/internal/parser"
 	"Auth-Service/internal/repository"
 	"Auth-Service/pkg/logger"
 	"Auth-Service/pkg/logger/console"
@@ -17,16 +16,14 @@ const (
 )
 
 type tokenRepository struct {
-	db      *gorm.DB
-	logger  logger.ILogger
-	parsers parser.IFactory
+	db     *gorm.DB
+	logger logger.ILogger
 }
 
-func NewTokenRepository(sqlDb *gorm.DB, logger logger.ILogger, parsers parser.IFactory) repository.ITokenRepository {
+func NewTokenRepository(sqlDb *gorm.DB, logger logger.ILogger) repository.ITokenRepository {
 	return &tokenRepository{
-		db:      sqlDb,
-		logger:  logger,
-		parsers: parsers,
+		db:     sqlDb,
+		logger: logger,
 	}
 }
 
